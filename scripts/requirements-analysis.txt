@@ -1,0 +1,8 @@
+# Python packages for scripts/cg-*.py (code-graph extraction). Install: venv/bin/pip install -r scripts/requirements-analysis.txt
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+pyan3==2.9.0
+pyflakes==4.1.0
+tree-sitter==0.26.1
+tree-sitter-cpp==0.23.4
+tree-sitter-python==0.25.0

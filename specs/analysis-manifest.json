@@ -1,0 +1,116 @@
+{
+  "registryFiles": [
+    "sources/urls.md"
+  ],
+  "toolboxVersion": "3.3.1",
+  "lastAnalysis": {
+    "date": "2026-11-14",
+    "repositories": {
+      "deep-rts": {
+        "commit": "6bfbfd5"
+      }
+    }
+  },
+  "artifacts": {
+    "code-graph": {
+      "lastAnalyzedDate": "2026-11-14",
+      "lastAnalyzedCommit": "6bfbfd5",
+      "generatedDate": "2026-11-14",
+      "generatedWithSkillVersion": "1.0",
+      "method": "tree-sitter-cpp 0.23.4 + tree-sitter-python 0.25.0 (tier 2) + class-hierarchy analysis + pybind boundary model; pyan3 2.9.0 cross-check; sqlite3",
+      "regenerate": "venv/bin/python scripts/cg-extract.py && venv/bin/python scripts/cg-pyan-crosscheck.py && venv/bin/python scripts/cg-reports.py",
+      "code_graph_mode": "sqlite",
+      "sourceRepos": [
+        "deep-rts"
+      ],
+      "files": [
+        "code/deep-rts/code_graph.sqlite"
+      ],
+      "reports": [
+        "docs/architecture-docs/analysis/09-code-graph.md",
+        "docs/architecture-docs/reports/entry-point-map.md",
+        "docs/architecture-docs/reports/dead-code.md",
+        "docs/architecture-docs/reports/sqlite-cookbook.md"
+      ],
+      "stats": {
+        "totalNodes": 502,
+        "resolvedEdges": 732,
+        "crossRepoCalls": 0,
+        "entryPoints": 166,
+        "deadCodeNodes": 100,
+        "deadCodeRate": "19.9%",
+        "repoCoverage": "1/1 (100%)",
+        "languageCoverage": "2/4 (50%)",
+        "crossRepoMechanismCoverage": "n/a (0/0, single repo)",
+        "edgeResolutionCoverage": {
+          "overall": "35.6%",
+          "byLanguage": {
+            "cpp": "45.4%",
+            "python": "14.0%"
+          }
+        },
+        "gaps": [
+          "learning-rts is not tracked yet (no remote; see sources/urls.md), so repoCoverage covers only the one tracked repo",
+          "languageCoverage 2/4: CMake and Bash (build/install scripts, 6 files) are deliberately not extracted; tree-sitter-cmake/bash exist but those files are build tooling, not product call graph",
+          "crossRepoMechanismCoverage n/a: single repo; the only cross-boundary mechanism (pybind11 Python<->C++) is resolved into call edges, not mechanism_edges",
+          "no type-aware tool for C++ (clang absent; project does not configure: xtensor/vcpkg failure). tree-sitter + class-hierarchy analysis only: templates, overloads beyond arity and calls through auto-typed expression chains are not resolved",
+          "edgeResolutionCoverage is strict (all unresolved calls in the denominator). Excluding external-package calls (std/OpenCV/Blend2D/xtensor/pybind/torch/pygame): cpp 97.4%, python 37.0%",
+          "python: 153 calls stay type-alias after all 2.1.1 heuristics (untyped parameters in the examples and pygame-facing gui code); pyan3 tier-1 cross-check agrees with only 47.1% of its own edges (see 09-code-graph.md)",
+          "SRE view 08 does not exist (arch-analysis does not produce it): reports/sre-hot-paths.md skipped",
+          "vendored code excluded from the graph: include/DeepRTS/util/JPS.h (1538 lines), bindings/utilities/ndarray_converter.* ; calls into them are external-package"
+        ]
+      }
+    },
+    "arch-analysis": {
+      "lastAnalyzedDate": "2026-11-14",
+      "lastAnalyzedCommit": "6bfbfd5",
+      "sourceRepos": [
+        "deep-rts"
+      ],
+      "generatedWithSkillVersion": "1.0",
+      "views": [
+        "docs/architecture-docs/analysis/01-technology-manifest.md",
+        "docs/architecture-docs/analysis/02-interface-specification.md",
+        "docs/architecture-docs/analysis/03-architecture-diagrams.md",
+        "docs/architecture-docs/analysis/04-documentation-audit.md",
+        "docs/architecture-docs/analysis/05-dependency-health.md",
+        "docs/architecture-docs/analysis/06-data-flow-map.md",
+        "docs/architecture-docs/analysis/07-error-handling.md",
+        "docs/architecture-docs/analysis/09-code-graph.md",
+        "docs/architecture-docs/index.md"
+      ],
+      "reports": [
+        "docs/architecture-docs/reports/findings-summary.md",
+        "docs/architecture-docs/reports/entry-point-map.md",
+        "docs/architecture-docs/reports/dead-code.md",
+        "docs/architecture-docs/reports/sqlite-cookbook.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "date": "2026-11-14",
+      "skill": "arch-analysis",
+      "trigger": "manual (first full scan, v0.0.1 consolidation)",
+      "repos": [
+        "deep-rts"
+      ],
+      "notes": "Initial full scan. Update log: docs/update-logs/2026-11-14-initial-full-scan.md"
+    },
+    {
+      "date": "2026-11-14",
+      "skill": "code-graph",
+      "trigger": "manual (first extraction, v0.0.1 consolidation)",
+      "repos": [
+        "deep-rts"
+      ],
+      "coverage": {
+        "repoCoverage": "1/1 (100%)",
+        "languageCoverage": "2/4 (50%)",
+        "crossRepoMechanismCoverage": "n/a (0/0)",
+        "edgeResolutionCoverage": "35.6% overall (cpp 45.4%, python 14.0%)"
+      },
+      "notes": "project-internal resolution: cpp 97.4%, python 37.0%"
+    }
+  ]
+}
