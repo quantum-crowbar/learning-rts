@@ -37,7 +37,8 @@ First time on a fresh clone: `git submodule update --init && scripts/bootstrap-s
 
 ### Architecture
 
-- `docs/architecture-docs/` — **generated** analysis (do not hand-edit; regenerate with `/update`).
+- `docs/architecture-docs/` — **generated** analysis (do not hand-edit; regenerate with `/update` or the commands in `specs/analysis-manifest.json`). Start at `index.md`, then `reports/findings-summary.md`.
+- `docs/update-logs/` — one log per analysis session; `scripts/cg-*.py` — reproducible code-graph extraction.
 - `docs/legacy/deep-rts/` — hand-written docs from before the toolbox. **Unverified**: known to contain errors (e.g. 0-based action IDs; real IDs are 1–16 in `Constants.h`). Use only as a baseline to diff regenerated analysis against; never cite as fact.
 - `code/<repo>/code_graph.sqlite` — code graph per repo (gitignored). Prefer SQL queries over reading source when it is current.
 - `specs/analysis-manifest.json` — what was analysed, at which SHA, with which toolbox version.
@@ -88,9 +89,9 @@ These files are always loaded from the `.quantum-toolbox` submodule:
 
 | Field | Value |
 |-------|-------|
-| Arch-analysis views | none yet |
-| Code graph | not run |
-| Staleness | analysis has never run on this repo |
+| Arch-analysis views | 01 technology, 02 interfaces, 03 diagrams, 04 documentation audit, 05 dependency health, 06 data flow, 07 error handling, 09 code graph (entry: `docs/architecture-docs/index.md`) |
+| Code graph | 502 nodes, 732 edges, 0 cross-repo calls; snapshot 2026-11-14; `code/deep-rts/code_graph.sqlite` (tier 2, see `docs/architecture-docs/analysis/09-code-graph.md`) |
+| Staleness | `deep-rts` analysed 2026-11-14 at `6bfbfd5`; `learning-rts` never analysed (no code yet) |
 
 ## Post-Work Hook (mandatory after any skill that commits artefacts)
 

@@ -17,6 +17,10 @@ cd deep-rts-playground
 scripts/bootstrap-sources.sh
 ```
 
+## Analysis of the old engine
+
+`docs/architecture-docs/index.md` is the entry point (generated 2026-11-14 from `deep-rts` @ `6bfbfd5`): technology, interfaces, diagrams, documentation audit, dependency health, data flow, error handling and a SQLite code graph (502 functions, 732 edges). Reports: `reports/findings-summary.md`, `entry-point-map.md`, `dead-code.md`, `sqlite-cookbook.md`. Regenerate the graph with the commands listed in `specs/analysis-manifest.json`.
+
 For AI agents (any harness): start at [AGENTS.md](AGENTS.md) and [CONTEXT.md](CONTEXT.md), then run `/start`.
 
 Upstream DeepRTS is MIT-licensed; see [LICENCE.md](LICENCE.md). Its original paper: Andersen, Goodwin, Granmo, *Deep RTS: A Game Environment for Deep Reinforcement Learning in Real-Time Strategy Games*, IEEE CIG 2018. The original README is kept at `docs/legacy/deep-rts/README.md`.

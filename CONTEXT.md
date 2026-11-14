@@ -30,7 +30,7 @@ Current project context and state information for AI agents.
 
 **Version:** 0.0.1
 
-**Status:** Consolidation done; no analysis run yet; no working build of deep-rts.
+**Status:** Consolidated; deep-rts analysed (arch-analysis + code-graph, 2026-11-14); no working build of deep-rts; fix-vs-rebuild not decided.
 
 ### Implemented
 
@@ -38,6 +38,9 @@ Current project context and state information for AI agents.
 - `.quantum-toolbox` adopted at v3.3.1 (replaces the old `.aiagent-config`/agents-setup submodule)
 - Harness-agnostic `AGENTS.md` + `CONTEXT.md`; `CLAUDE.md` only imports `AGENTS.md`
 - Upstream check (2026-11-14): nothing newer than `6bfbfd5`
+- Full analysis of `code/deep-rts`: 7 architecture views + View 09 + 4 reports in `docs/architecture-docs/` (start at `index.md`, then `reports/findings-summary.md`)
+- Code graph in `code/deep-rts/code_graph.sqlite` (502 nodes, 732 edges, 0 function-level cycles); regenerate with the commands in `specs/analysis-manifest.json`
+- Legacy docs audited: 50% claim accuracy (`docs/architecture-docs/analysis/04-documentation-audit.md`)
 
 ### In Progress
 
@@ -45,10 +48,10 @@ Current project context and state information for AI agents.
 
 ### Planned
 
-1. Run `/start` setup validation, then arch-analysis + code-graph on `code/deep-rts`
-2. Diff regenerated analysis against `docs/legacy/deep-rts/` (doc-accuracy baseline)
-3. Fix-vs-rebuild decision for deep-rts → learning-rts (use `tech-stack-decisions`)
-4. Add a remote for `code/learning-rts`, then list it in `sources/urls.md`
+1. Revoke the Discord webhook committed in `.travis.yml:28` (owner action; token is in the public upstream history)
+2. Fix-vs-rebuild decision for deep-rts → learning-rts (use `tech-stack-decisions`; inputs in `reports/findings-summary.md`)
+3. Add a remote for `code/learning-rts`, then list it in `sources/urls.md`
+4. If deep-rts is kept: a build that gets past configure (one pinned dependency path, xtensor ≥ 0.26), then re-extract with a clang-based graph
 5. Eventually: squash/delete pre-0.0.1 history (owner's stated intent; **do not do it unasked**)
 
 ## Key Components
@@ -64,20 +67,25 @@ Current project context and state information for AI agents.
 | `code/deep-rts/` | OLD engine, pinned `6bfbfd5` + patches (gitignored, read-only reference) |
 | `code/learning-rts/` | NEW project, own git repo, scaffold only (gitignored here, no remote yet) |
 | `docs/legacy/deep-rts/` | Hand-written pre-toolbox docs. **Unverified baseline**, not truth |
-| `docs/architecture-docs/` | Generated analysis (empty until first run) |
-| `specs/analysis-manifest.json` | Analysis manifest (created by first run) |
+| `docs/architecture-docs/index.md` | Entry point of the generated analysis |
+| `docs/architecture-docs/analysis/` | Views 01-07 and 09 (code graph) |
+| `docs/architecture-docs/reports/` | `findings-summary`, `entry-point-map`, `dead-code`, `sqlite-cookbook` |
+| `docs/update-logs/` | One log per analysis session |
+| `specs/analysis-manifest.json` | Analysis manifest (toolbox schema, validated) |
+| `scripts/cg-extract.py`, `cg-pyan-crosscheck.py`, `cg-reports.py` | Code-graph extraction and report generation (`scripts/requirements-analysis.txt`) |
+| `code/deep-rts/code_graph.sqlite` | Queryable code graph (gitignored, regenerable) |
 
 ## Known Issues
 
-- **deep-rts does not build.** Last attempt (January 2026; log kept untracked at the repo root as `build.log`) failed at CMake configure: `Could not find xtensor`. Root cause: vcpkg rejects the spec `xtensor[xsimd]@0.24.7` generated from `vcpkg_dependencies.txt`. `patches/deep-rts/0001` fixes the xtensor header move, the xtensor-python pin and CMake policy, **not** the vcpkg spec. Install script also tries `sudo apt`.
-- **Legacy docs contain errors.** Example: action IDs are 1–16 in `Constants.h`, legacy docs say 0–15. The 6M steps/sec figure is upstream's claim; unmeasured here.
-- **Code-graph on C++ will be approximate.** C++ is not in the toolbox's language table; expect tree-sitter (syntax-only, no type resolution) or AI extraction. Misses virtual dispatch (state machine), templates (xtensor) and pybind trampolines. A working CMake configure yields `compile_commands.json` for a clang-based graph. Record per-language `edgeResolutionCoverage` after the run.
-- Upstream moved: `cair/DeepRTS` → `pa-research/deep-rts`. Dormant since 2023-05-16; 14 open issues (unread).
+- **deep-rts does not build.** Last attempt (January 2026; log kept untracked at the repo root as `build.log`) failed at CMake configure: `Could not find xtensor`. In that run vcpkg rejected the spec `xtensor[xsimd]@0.24.7`; the origin of the `@0.24.7` suffix is **not** in the current tree (the log predates later edits), so the root cause is not established. The pip path installs unpinned vcpkg master and runs `apt-get` (needs root). `patches/deep-rts/0001` changes the xtensor include to `xtensor/containers/` (xtensor ≥ 0.26), which the pinned PMM baseline (0.24.3) does not provide. Details: `docs/architecture-docs/analysis/05-dependency-health.md`.
+- **Legacy docs are 50% accurate** (21 discrepancies in `04-documentation-audit.md`). Examples: action IDs are 1–16 (docs say 0–15), the documented tensor channels are wrong, the Python wrapper cannot be imported. The 6M steps/sec figure is upstream's claim; unmeasured (and the engine defaults to a 60 steps/s wall-clock gate).
+- **Code graph is tier 2 (tree-sitter + class-hierarchy analysis), not type-aware.** Measured: C++ project-internal call resolution 97.4%, Python 37.0%; templates, overloads beyond arity and `auto` expression chains are unresolved. Virtual dispatch (state machine) and the pybind boundary *are* modelled. A configurable build would allow a clang-based graph. Scorecard and named gaps: `docs/architecture-docs/analysis/09-code-graph.md`.
+- Upstream moved: `cair/DeepRTS` → `pa-research/deep-rts`. Dormant since 2023-05-16; 14 open items on GitHub (3 are dependabot PRs; the rest unread).
 - Commit `6b17326` carries a `Co-Authored-By` AI trailer. Violates the no-attribution rule; fix only when history is squashed (see Planned 5).
 
 ## Dependencies
 
-Metarepo has no runtime dependencies. Analysis tooling (tree-sitter grammars, etc.) is installed per the code-graph skill at run time.
+Metarepo has no runtime dependencies. Analysis scripts need `venv/bin/pip install -r scripts/requirements-analysis.txt` (tree-sitter, tree-sitter-cpp, tree-sitter-python, pyan3, pyflakes, jsonschema).
 
 ## Environment Setup
 
@@ -90,7 +98,8 @@ Metarepo has no runtime dependencies. Analysis tooling (tree-sitter grammars, et
 
 1. `git clone --recurse-submodules <this repo> && cd deep-rts-playground`
 2. `scripts/bootstrap-sources.sh`
-3. Start an agent session in this directory and run `/start`
+3. `python3 -m venv venv && venv/bin/pip install -r scripts/requirements-analysis.txt` (only to regenerate the code graph)
+4. Start an agent session in this directory and run `/start`
 
 ### Running Tests
 
@@ -110,9 +119,9 @@ None yet. Bootstrap check: run `scripts/bootstrap-sources.sh` twice; second run 
 
 | Setting | Value |
 |---------|-------|
-| SQLite-first | `disabled` (enabled once extraction has run) |
-| Last extraction | not run |
-| Extraction scope | not run (intended: `deep-rts`) |
+| SQLite-first | `enabled` |
+| Last extraction | 2026-11-14 (`deep-rts` @ `6bfbfd5`; tier 2; 502 nodes, 732 edges) |
+| Extraction scope | `deep-rts` (single repo, unified SQLite; `learning-rts` untracked) |
 
 ---
 
@@ -120,4 +129,4 @@ None yet. Bootstrap check: run `scripts/bootstrap-sources.sh` twice; second run 
 
 | Date | Changes |
 |------|---------|
-| 2026-11-14 | Consolidated into metarepo (v0.0.1): old/new split, toolbox v3.3.1, harness-agnostic AGENTS/CONTEXT |
+| 2026-11-14 | Consolidated into metarepo (v0.0.1): old/new split, toolbox v3.3.1, harness-agnostic AGENTS/CONTEXT; arch-analysis complete (7 views + View 09, 4 reports); code-graph extracted: 502 nodes, 732 edges, 0 cross-repo calls |
