@@ -1,0 +1,21 @@
+# Source clones (see sources/pins.env, scripts/bootstrap-sources.sh)
+code/
+
+# Code-graph databases
+*.sqlite
+*.sqlite-journal
+
+# Local environments and build output
+venv/
+.venv/
+build/
+*.log
+__pycache__/
+*.egg-info/
+
+# Tool-local files (permissions, caches); never commit
+.claude/settings.local.json
+.claude/
+.idea/
+.vscode/
+.DS_Store
