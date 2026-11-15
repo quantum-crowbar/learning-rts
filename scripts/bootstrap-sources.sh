@@ -9,7 +9,7 @@ cd "$ROOT"
 source sources/pins.env
 mkdir -p code
 
-# --- OLD: deep-rts (pinned upstream + patches) -------------------------------
+# --- Inspiration: deep-rts (pinned upstream + patches) -----------------------
 DR=code/deep-rts
 if [ ! -d "$DR/.git" ]; then
   git clone --quiet "$DEEP_RTS_URL" "$DR"
@@ -31,10 +31,20 @@ for p in patches/deep-rts/*.patch; do
   fi
 done
 
-# --- NEW: learning-rts (own repo; remote not configured yet) ------------------
+# --- Ours: learning-rts (own repo; remote not configured yet) ----------------
 NR=code/learning-rts
 if [ ! -d "$NR/.git" ]; then
   echo "NOTE: $NR missing. If it has a remote, clone it there; otherwise create it with 'git init $NR'." >&2
 fi
 
+# --- Sibling: ejaj-boj (the owner's earlier project; read-only here, no patches) ---
+# Submodules (.quantum-crew, .quantum-toolbox) are deliberately NOT initialised: they are tooling, not its code.
+EB=code/ejaj-boj
+if [ ! -d "$EB/.git" ]; then
+  git clone --quiet "$EJAJ_BOJ_URL" "$EB"
+fi
+git -C "$EB" fetch --quiet origin
+git -C "$EB" checkout --quiet "$EJAJ_BOJ_SHA"
+
 echo "deep-rts @ $(git -C "$DR" rev-parse --short HEAD) (+patches)"
+echo "ejaj-boj @ $(git -C "$EB" rev-parse --short HEAD)"

@@ -4,10 +4,13 @@
   ],
   "toolboxVersion": "3.3.1",
   "lastAnalysis": {
-    "date": "2026-11-14",
+    "date": "2026-11-15",
     "repositories": {
       "deep-rts": {
         "commit": "6bfbfd5"
+      },
+      "ejaj-boj": {
+        "commit": "fde9d3c"
       }
     }
   },
@@ -21,10 +24,12 @@
       "regenerate": "venv/bin/python scripts/cg-extract.py && venv/bin/python scripts/cg-pyan-crosscheck.py && venv/bin/python scripts/cg-reports.py",
       "code_graph_mode": "sqlite",
       "sourceRepos": [
-        "deep-rts"
+        "deep-rts",
+        "ejaj-boj"
       ],
       "files": [
-        "code/deep-rts/code_graph.sqlite"
+        "code/deep-rts/code_graph.sqlite",
+        "code/ejaj-boj/code_graph.sqlite"
       ],
       "reports": [
         "docs/architecture-docs/analysis/09-code-graph.md",
@@ -39,7 +44,7 @@
         "entryPoints": 166,
         "deadCodeNodes": 100,
         "deadCodeRate": "19.9%",
-        "repoCoverage": "1/1 (100%)",
+        "repoCoverage": "2/2 (100%)",
         "languageCoverage": "2/4 (50%)",
         "crossRepoMechanismCoverage": "n/a (0/0, single repo)",
         "edgeResolutionCoverage": {
@@ -59,13 +64,61 @@
           "SRE view 08 does not exist (arch-analysis does not produce it): reports/sre-hot-paths.md skipped",
           "vendored code excluded from the graph: include/DeepRTS/util/JPS.h (1538 lines), bindings/utilities/ndarray_converter.* ; calls into them are external-package"
         ]
+      },
+      "note": "Top-level stats/regenerate/reports describe the primary repo (deep-rts); other repos are under perRepo.",
+      "perRepo": {
+        "ejaj-boj": {
+          "lastAnalyzedDate": "2026-11-15",
+          "lastAnalyzedCommit": "fde9d3c",
+          "generatedWithSkillVersion": "1.0",
+          "method": "stdlib ast + project-local type resolution (Python); tree-sitter-javascript 0.25.0 (JavaScript); browser->server http/websocket edges; pyan3 2.9.0 cross-check; sqlite3",
+          "regenerate": "venv/bin/python scripts/cg-ejaj-boj.py && venv/bin/python scripts/cg-pyan-crosscheck.py ejaj-boj && venv/bin/python scripts/cg-ejaj-boj-reports.py",
+          "code_graph_mode": "sqlite",
+          "files": [
+            "code/ejaj-boj/code_graph.sqlite"
+          ],
+          "reports": [
+            "docs/ejaj-boj/architecture-docs/analysis/09-code-graph.md",
+            "docs/ejaj-boj/architecture-docs/reports/entry-point-map.md",
+            "docs/ejaj-boj/architecture-docs/reports/dead-code.md",
+            "docs/ejaj-boj/architecture-docs/reports/sqlite-cookbook.md"
+          ],
+          "stats": {
+            "totalNodes": 271,
+            "resolvedEdges": 326,
+            "crossRepoCalls": 0,
+            "entryPoints": 57,
+            "deadCodeNodes": 29,
+            "deadCodeRate": "10.7%",
+            "repoCoverage": "1/1 (100%)",
+            "languageCoverage": "2/3 (67%)",
+            "crossRepoMechanismCoverage": "n/a (0/0, single repo)",
+            "edgeResolutionCoverage": {
+              "overall": "23.8%",
+              "byLanguage": {
+                "python": "29.8%",
+                "javascript": "18.2%"
+              },
+              "projectInternalTyped": "85.5%",
+              "projectInternalInclNameMatch": "97.2%"
+            },
+            "gaps": [
+              "languageCoverage 2/3: Bash (run-crew.sh, AI-crew runner) not extracted; HTML/CSS are markup",
+              "no type checker run on Python: stdlib ast + project-local resolution; bare list annotations lose element types, so 37 call sites use a unique-method-name fallback (edge type name-match, reported separately)",
+              "JavaScript: DOM/Canvas/builtin calls are classified external-package by a name allowlist; flow-insensitive typing",
+              "tests, AI-crew tooling and .quantum-* submodules are excluded from the graph; dead-code report lists test references per candidate",
+              "crossRepoMechanismCoverage n/a: single repo; browser->server HTTP/WebSocket resolved as in-repo edges"
+            ]
+          }
+        }
       }
     },
     "arch-analysis": {
       "lastAnalyzedDate": "2026-11-14",
       "lastAnalyzedCommit": "6bfbfd5",
       "sourceRepos": [
-        "deep-rts"
+        "deep-rts",
+        "ejaj-boj"
       ],
       "generatedWithSkillVersion": "1.0",
       "views": [
@@ -84,7 +137,33 @@
         "docs/architecture-docs/reports/entry-point-map.md",
         "docs/architecture-docs/reports/dead-code.md",
         "docs/architecture-docs/reports/sqlite-cookbook.md"
-      ]
+      ],
+      "perRepo": {
+        "ejaj-boj": {
+          "lastAnalyzedDate": "2026-11-15",
+          "lastAnalyzedCommit": "fde9d3c",
+          "generatedWithSkillVersion": "1.0",
+          "docsRoot": "docs/ejaj-boj/architecture-docs",
+          "views": [
+            "docs/ejaj-boj/architecture-docs/index.md",
+            "docs/ejaj-boj/architecture-docs/analysis/01-technology-manifest.md",
+            "docs/ejaj-boj/architecture-docs/analysis/02-interface-specification.md",
+            "docs/ejaj-boj/architecture-docs/analysis/03-architecture-diagrams.md",
+            "docs/ejaj-boj/architecture-docs/analysis/04-documentation-audit.md",
+            "docs/ejaj-boj/architecture-docs/analysis/05-dependency-health.md",
+            "docs/ejaj-boj/architecture-docs/analysis/06-data-flow-map.md",
+            "docs/ejaj-boj/architecture-docs/analysis/07-error-handling.md",
+            "docs/ejaj-boj/architecture-docs/analysis/09-code-graph.md"
+          ],
+          "reports": [
+            "docs/ejaj-boj/architecture-docs/reports/findings-summary.md",
+            "docs/ejaj-boj/architecture-docs/reports/entry-point-map.md",
+            "docs/ejaj-boj/architecture-docs/reports/dead-code.md",
+            "docs/ejaj-boj/architecture-docs/reports/sqlite-cookbook.md"
+          ]
+        }
+      },
+      "note": "Top-level lastAnalyzed*/views/reports describe the primary repo (deep-rts); other repos are under perRepo."
     }
   },
   "history": [
@@ -111,6 +190,30 @@
         "edgeResolutionCoverage": "35.6% overall (cpp 45.4%, python 14.0%)"
       },
       "notes": "project-internal resolution: cpp 97.4%, python 37.0%"
+    },
+    {
+      "date": "2026-11-15",
+      "skill": "arch-analysis",
+      "trigger": "manual (ejaj-boj added as a third source in the metarepo)",
+      "repos": [
+        "ejaj-boj"
+      ],
+      "notes": "Full scan of ejaj-boj at fde9d3c. Update log: docs/update-logs/2026-11-15-ejaj-boj-analysis.md"
+    },
+    {
+      "date": "2026-11-15",
+      "skill": "code-graph",
+      "trigger": "manual (ejaj-boj first extraction)",
+      "repos": [
+        "ejaj-boj"
+      ],
+      "coverage": {
+        "repoCoverage": "1/1 (100%)",
+        "languageCoverage": "2/3 (67%)",
+        "crossRepoMechanismCoverage": "n/a (0/0)",
+        "edgeResolutionCoverage": "23.8% strict overall; 85.5% project-internal typed; 97.2% incl. name-match"
+      },
+      "notes": "271 nodes, 326 edges, 0 cycles, 29 dead-code candidates. Scripts: scripts/cg-ejaj-boj.py, cg-ejaj-boj-reports.py."
     }
   ]
 }
