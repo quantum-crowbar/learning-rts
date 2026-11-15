@@ -1,18 +1,19 @@
 # AI Agent Instructions
 
-> **Last Updated:** 2026-11-14
+> **Last Updated:** 2026-11-15
 > **Version:** 0.0.1
 > **Toolbox:** quantum-toolbox v3.3.1 (`.quantum-toolbox/`)
 > **Audience:** any AI coding agent or human. This file is harness-agnostic; tool-specific files (`CLAUDE.md`, etc.) only point here.
 
-This repository is a **metarepo**: it holds knowledge, analysis and orchestration for two codebases. It does not hold their source. Source lives in gitignored clones under `code/`.
+This repository is a **metarepo**: it holds knowledge, analysis and orchestration for three codebases. It does not hold their source. Source lives in gitignored clones under `code/`.
 
 | Codebase | Path | Role | Rules |
 |----------|------|------|-------|
-| **deep-rts** (OLD) | `code/deep-rts/` | Upstream DeepRTS engine, pinned at `6bfbfd5` plus `patches/deep-rts/` | **Read-only reference.** Never commit into it. Fix it only via `patches/`. |
-| **learning-rts** (NEW) | `code/learning-rts/` | Our own RTS + deep-learning research system, built using deep-rts as a base | Its own git repo. All new development happens here. |
+| **deep-rts** (inspiration) | `code/deep-rts/` | Upstream DeepRTS, our **inspiration and starting reference**, pinned at `6bfbfd5` plus `patches/deep-rts/` | **Read-only.** Never commit into it. Change it only via `patches/`, and only to study or run it. |
+| **ejaj-boj** (sibling) | `code/ejaj-boj/` | The owner's earlier parametric-RTS project (Python/FastAPI server, JavaScript canvas client), pinned at `fde9d3c` (see `sources/pins.env`) | **Read-only here.** Never commit into it from this metarepo; it has its own remote (`quantum-crowbar/ejaj-boj`) and history. A source of CC0 sprites, ideas and measurements for learning-rts |
+| **learning-rts** (ours) | `code/learning-rts/` | Our own RTS + AI arena, designed by us. deep-rts inspires it; it is not a base we fix or port, and our design will keep diverging | Its own git repo. All our development happens here. |
 
-Keeping them separate is deliberate: analysis of the old code must stay reproducible and must never mix with new work.
+Keeping them separate is deliberate: analysis of deep-rts must stay reproducible and must never mix with our own work.
 
 ## Quick Start
 
@@ -27,17 +28,30 @@ Keeping them separate is deliberate: analysis of the old code must stay reproduc
 
 First time on a fresh clone: `git submodule update --init && scripts/bootstrap-sources.sh` (clones the source repos and applies patches).
 
+## Working Agreement: Teaching Mode
+
+The owner is a long-time C++ programmer who has not used it in years, and is **learning Rust and game-AI techniques** through this project. Learning is a goal of the work, not a side effect. For all learning-rts work:
+
+- **Explain choices.** For every non-trivial decision say what was chosen, why, which alternative was rejected, and what would make the choice wrong.
+- **Show code.** When writing or changing Rust, show the relevant snippet in the reply (not only "I changed file X") and walk through the Rust concepts it uses (ownership, borrowing, traits, enums, ...), relating them to C++ where that helps.
+- **Small, readable steps** the owner can read and run, rather than large generated drops. Say which parts are new Rust ideas.
+- **Say what was not verified.** Mark code that was not compiled or run.
+- This governs conversation, not documents: docs stay as short as their content allows.
+
 ## Project-Specific Guidelines
 
 ### Code Style
 
 - **Metarepo:** Markdown, shell and JSON only. Do not add application code here; it belongs in `code/learning-rts/`.
-- **learning-rts:** to be defined in its own `AGENTS.md`. Until then follow `.quantum-toolbox/skills/optional/code-conventions/`.
+- **learning-rts:** Rust core (decided), Python agents/arena/match server, TypeScript viewer (the last two proposed); see `docs/general/decisions.md`. Conventions are not written yet; until then follow `.quantum-toolbox/skills/optional/code-conventions/`.
 - **deep-rts (reference):** C++17 engine, pybind11 bindings, Python wrapper. Match upstream style only when producing a patch.
 
 ### Architecture
 
 - `docs/architecture-docs/` — **generated** analysis (do not hand-edit; regenerate with `/update` or the commands in `specs/analysis-manifest.json`). Start at `index.md`, then `reports/findings-summary.md`.
+- `docs/general/` — **hand-written design docs for learning-rts**: `README.md` (what we are doing), `architecture.md` (components, ER and sequence diagrams, how it works), `decisions.md` (decision log with status), `glossary.md`. Keep decisions.md current whenever a decision changes.
+- `docs/roadmap/ROADMAP.md` — milestones with exit gates.
+- `docs/ejaj-boj/architecture-docs/` — **generated** analysis of ejaj-boj (same rules: do not hand-edit; regenerate with `scripts/cg-ejaj-boj.py`, `cg-pyan-crosscheck.py ejaj-boj`, `cg-ejaj-boj-reports.py`). Start at `index.md`, then `reports/findings-summary.md`.
 - `docs/update-logs/` — one log per analysis session; `scripts/cg-*.py` — reproducible code-graph extraction.
 - `docs/legacy/deep-rts/` — hand-written docs from before the toolbox. **Unverified**: known to contain errors (e.g. 0-based action IDs; real IDs are 1–16 in `Constants.h`). Use only as a baseline to diff regenerated analysis against; never cite as fact.
 - `code/<repo>/code_graph.sqlite` — code graph per repo (gitignored). Prefer SQL queries over reading source when it is current.
@@ -89,9 +103,9 @@ These files are always loaded from the `.quantum-toolbox` submodule:
 
 | Field | Value |
 |-------|-------|
-| Arch-analysis views | 01 technology, 02 interfaces, 03 diagrams, 04 documentation audit, 05 dependency health, 06 data flow, 07 error handling, 09 code graph (entry: `docs/architecture-docs/index.md`) |
-| Code graph | 502 nodes, 732 edges, 0 cross-repo calls; snapshot 2026-11-14; `code/deep-rts/code_graph.sqlite` (tier 2, see `docs/architecture-docs/analysis/09-code-graph.md`) |
-| Staleness | `deep-rts` analysed 2026-11-14 at `6bfbfd5`; `learning-rts` never analysed (no code yet) |
+| Arch-analysis views | deep-rts and ejaj-boj: 01 technology, 02 interfaces, 03 diagrams, 04 documentation audit, 05 dependency health, 06 data flow, 07 error handling, 09 code graph (entries: `docs/architecture-docs/index.md`, `docs/ejaj-boj/architecture-docs/index.md`) |
+| Code graph | deep-rts: 502 nodes, 732 edges, 0 cross-repo calls; snapshot 2026-11-14; `code/deep-rts/code_graph.sqlite` (tier 2, see `docs/architecture-docs/analysis/09-code-graph.md`). ejaj-boj: 271 nodes, 326 edges, 0 cycles; snapshot 2026-11-15; `code/ejaj-boj/code_graph.sqlite` (tier 2, see `docs/ejaj-boj/architecture-docs/analysis/09-code-graph.md`) |
+| Staleness | `deep-rts` analysed 2026-11-14 at `6bfbfd5`; `ejaj-boj` analysed 2026-11-15 at `fde9d3c`; `learning-rts` never analysed (no code yet) |
 
 ## Post-Work Hook (mandatory after any skill that commits artefacts)
 
@@ -154,5 +168,5 @@ After any skill that writes `specs/analysis-manifest.json`:
 
 - When project-specific guidelines change
 - When enabling/disabling optional skills
-- When the repository layout or the old/new project boundary changes
+- When the repository layout or the deep-rts / learning-rts boundary changes
 - When onboarding requirements change
