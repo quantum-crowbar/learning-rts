@@ -73,6 +73,7 @@ I was asleep, so these were the assistant's calls. Each is reversible; tell me i
 | Q09 | LLM-driven agents: which interface, decision interval, cost | M7 | Optional |
 | Q10 | Sprites from my project **ejaj-boj**: use them as the default skin instead of, or next to, the DeepRTS sprites? | M1b | Analysed 2026-11-15 ([ejaj-boj docs](../ejaj-boj/architecture-docs/index.md)): 34 PNGs under `code/ejaj-boj/client/assets/`; `CREDITS.md` names two Pixel Frog packs (Tiny Swords Free and Enemy), both CC0 with source URL. Not every PNG's origin is recorded, and ejaj-boj has no LICENSE file for its own code. Frame layouts are in `client/lib/tile-coords.mjs`, `sprites.mjs`, `anim-config.mjs` and `scripts/setup_assets.py` (not yet mapped to a skin manifest). The skin manifest (D23) makes a second source cheap |
 | Q11 | How should a game that hits the time limit be scored, so passivity does not win? | next session | Found 2026-11-16: the evolved agent wins every match by hoarding. Options: draw (simple, kills the exploit, many draws), damage dealt, resources spent on army. I recommend draw first |
+| Q12 | Animated sprites: which sheets give walk, attack and death frames for each unit, and how does the skin manifest describe per-state animations? | after M3b (not scheduled) | Idle frames only today. ejaj-boj's `client/lib/anim-config.mjs` and the `Factions/Knights/Troops/` sheets are the first places to look; not inspected yet |
 
 ## Known unknowns
 
