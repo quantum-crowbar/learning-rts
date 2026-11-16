@@ -1,3 +1,6 @@
 [submodule ".quantum-toolbox"]
 	path = .quantum-toolbox
 	url = https://github.com/quantum-crowbar/quantum-toolbox.git
+[submodule "quantum-basics"]
+	path = .quantum-basics
+	url = git@github.com:quantum-crowbar/quantum-basics.git
