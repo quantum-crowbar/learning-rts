@@ -1,19 +1,19 @@
 # Glossary
 
-Terms used across the project. Sections: project, game, simulation, AI, Rust, tooling, deep-rts (our inspiration). Rust entries relate to C++ where that helps. Add a term here the first time a doc uses it.
+Terms used across the project. Sections: project, game, simulation, AI, Rust, tooling, deep-rts (my inspiration). Rust entries relate to C++ where that helps. Add a term here the first time a doc uses it.
 
 ## Project
 
 | Term | Meaning |
 |------|---------|
-| **ADR** | Architecture Decision Record: a short note recording one decision, why, and what was rejected. Our log is [decisions.md](decisions.md). |
+| **ADR** | Architecture Decision Record: a short note recording one decision, why, and what was rejected. My log is [decisions.md](decisions.md). |
 | **Arena** | The program that loads agent specs, runs many seeded matches between them in parallel, swaps sides, and computes ratings. |
-| **deep-rts** | Upstream DeepRTS, a C++ RTS research environment: our **inspiration and starting reference**, cloned read-only at `code/deep-rts/`. Hyphenated in the repo, "DeepRTS" as a product name. We do not fix or port it. |
-| **ejaj-boj** | The owner's earlier parametric-RTS project (Python server, JavaScript canvas client): two AI agents configured by a parameter dict fight while you watch. Read-only in the metarepo at `code/ejaj-boj/`, analysed in `docs/ejaj-boj/`. Its sprites (Tiny Swords, CC0) are a candidate skin source (decisions.md, Q10). |
-| **learning-rts** | Our project: our own game and AI arena, inspired by deep-rts, in its own git repo at `code/learning-rts/`. |
+| **deep-rts** | Upstream DeepRTS, a C++ RTS research environment: my **inspiration and starting reference**, cloned read-only at `code/deep-rts/`. Hyphenated in the repo, "DeepRTS" as a product name. I do not fix or port it. |
+| **ejaj-boj** | My earlier parametric-RTS project (Python server, JavaScript canvas client): two AI agents configured by a parameter dict fight while I watch. Read-only in the metarepo at `code/ejaj-boj/`, analysed in `docs/ejaj-boj/`. Its sprites (Tiny Swords, CC0) are a candidate skin source (decisions.md, Q10). |
+| **learning-rts** | My project: my own game and AI arena, inspired by deep-rts, in its own git repo at `code/learning-rts/`. |
 | **Metarepo** | This repository: docs, analysis and orchestration for both codebases. It holds no application source; source lives in gitignored clones under `code/`. |
 | **M0 ... M7** | Roadmap milestones. Each has an exit gate that a run can fail. See [../roadmap/ROADMAP.md](../roadmap/ROADMAP.md). |
-| **Teaching mode** | The working agreement that the assistant explains choices and shows code, because the owner is learning Rust. See [../../AGENTS.md](../../AGENTS.md). |
+| **Teaching mode** | The working agreement that the assistant explains choices and shows code, because I am learning Rust. See [../../AGENTS.md](../../AGENTS.md). |
 | **Provenance labels** | `ran` / `graph` / `read` / `fetched`: how a claim in the generated analysis was verified. |
 
 ## Game
@@ -36,7 +36,7 @@ Terms used across the project. Sections: project, game, simulation, AI, Rust, to
 
 | Term | Meaning |
 |------|---------|
-| **Annotation** | Extra drawing instructions an agent attaches to its decisions (for example "target = unit 14"), shown in the viewer so you see why it acted. |
+| **Annotation** | Extra drawing instructions an agent attaches to its decisions (for example "target = unit 14"), shown in the viewer so I see why it acted. |
 | **Command** | A request from an agent to the sim ("train a footman", "send these units to tile P"). Commands are data; the sim validates and executes them. |
 | **Core (sim core)** | The Rust library holding all game logic. No clock, no IO, no global state. |
 | **Decision interval** | How many ticks pass between an agent's decisions. Slow agents (search, LLM) use a larger interval. |
@@ -44,7 +44,7 @@ Terms used across the project. Sections: project, game, simulation, AI, Rust, to
 | **Event** | A fact the sim reports after a step (`UnitKilled`, `ResourceDelivered`, `PlayerDefeated`). Rewards are computed from events. |
 | **Fixed-point** | Representing fractions as integers (for example 1/256 of a tile as the unit). Avoids floating-point differences between machines, which would break determinism. |
 | **Generational id** | An entity handle made of (row index, generation). When a row is reused its generation changes, so an old handle is detected as stale instead of silently pointing at a different unit. |
-| **Live mode** | The match server plays a match in front of you, streaming each tick to the viewer. |
+| **Live mode** | The match server plays a match in front of me, streaming each tick to the viewer. |
 | **Pacing** | How fast ticks are produced in real time (1x, 4x, as fast as possible). Owned by the match runner, never by the core. |
 | **Replay** | A file that records a match so it can be watched later: header (rules version, map, seed, agent specs) plus per-tick snapshots. |
 | **RNG (seeded)** | A random-number generator started from a fixed seed so runs are reproducible. |
@@ -54,30 +54,30 @@ Terms used across the project. Sections: project, game, simulation, AI, Rust, to
 | **State hash** | A single number summarising the whole world state at a tick; two runs are identical if their hashes match at every tick. The determinism test compares them. |
 | **Step** | Advance the world by one tick, given the commands issued for that tick. |
 | **Tick** | The sim's unit of time. There is no wall clock in the core; time is the tick counter. |
-| **Trampoline** | (deep-rts) A C++ class that forwards virtual calls to Python so Python can override C++ behaviour. We do not need one: agents call into the core, not the reverse. |
+| **Trampoline** | (deep-rts) A C++ class that forwards virtual calls to Python so Python can override C++ behaviour. I do not need one: agents call into the core, not the reverse. |
 
 ## AI
 
 | Term | Meaning |
 |------|---------|
-| **A\*** | A shortest-path search on a grid using a distance estimate. Our first pathfinder. |
+| **A\*** | A shortest-path search on a grid using a distance estimate. My first pathfinder. |
 | **Agent** | Whatever chooses commands for one player: a script, a search procedure, a neural network, an LLM. |
 | **Agent spec** | A file naming an agent type and its parameters (and optionally weights). The unit of exchange in the arena. |
 | **Behaviour tree / utility AI** | Two common ways to structure scripted game bots. |
-| **Bradley-Terry / Elo / TrueSkill** | Rating systems that turn win/loss results into a strength number. Which one we use is an open decision. |
+| **Bradley-Terry / Elo / TrueSkill** | Rating systems that turn win/loss results into a strength number. Which one I use is an open decision. |
 | **CMA-ES** | An evolutionary optimiser for continuous parameters; used to tune bot parameters (M4). |
 | **Curriculum** | Training on easy scenarios first, then harder ones. |
 | **Exploitability** | How badly the best counter-strategy beats an agent; a measure of how robust it is. |
-| **Gymnasium / PettingZoo** | Standard Python interfaces for single-agent and multi-agent reinforcement-learning environments. We expose the game through them when learning starts (M6). |
-| **JPS (jump point search)** | A faster variant of A\* for uniform grids. Used in deep-rts; we start with plain A\*. |
+| **Gymnasium / PettingZoo** | Standard Python interfaces for single-agent and multi-agent reinforcement-learning environments. I expose the game through them when learning starts (M6). |
+| **JPS (jump point search)** | A faster variant of A\* for uniform grids. Used in deep-rts; I start with plain A\*. |
 | **LLM agent** | An agent whose decisions come from a language model following natural-language instructions. Slow, so it uses a large decision interval. |
 | **MCTS (Monte-Carlo tree search)** | Search that plays out many simulated games from the current state to pick a command. Needs a fast, exact snapshot/restore. |
 | **Non-transitive** | A beats B, B beats C, C beats A. Visible in tournament results when units counter each other. |
 | **Observation** | What an agent sees of the world, computed from state on demand. |
 | **Observer** | A pluggable function that turns state into an observation (a tensor, an entity list). |
-| **PPO** | Proximal Policy Optimization, a standard reinforcement-learning algorithm; our first learned agent (M6). |
+| **PPO** | Proximal Policy Optimization, a standard reinforcement-learning algorithm; my first learned agent (M6). |
 | **Population / league** | Training many agents against each other so none overfits to one opponent. |
-| **Reward** | A number telling a learning agent how well it did, computed from events. Ours are real-valued and composable. |
+| **Reward** | A number telling a learning agent how well it did, computed from events. Mine are real-valued and composable. |
 | **Self-play** | A learning agent trains by playing copies of itself or past versions. |
 
 ## Rust
@@ -86,9 +86,9 @@ Terms used across the project. Sections: project, game, simulation, AI, Rust, to
 |------|---------|
 | **Borrow / `&T` / `&mut T`** | Temporary access to a value without taking it. Many shared `&T` borrows *or* exactly one exclusive `&mut T`, never both at once; the compiler enforces it. Closest C++ idea: references, but checked. |
 | **Cargo** | Rust's build tool and package manager (like CMake + a package manager in one). |
-| **Clone** | Make a deep copy. `#[derive(Clone)]` on the world struct gives us snapshots almost for free. |
+| **Clone** | Make a deep copy. `#[derive(Clone)]` on the world struct gives me snapshots almost for free. |
 | **Crate** | A Rust package or library (like a CMake target). |
-| **`enum`** | A type that is one of several variants, each able to carry data. Much stronger than a C++ `enum`; we use it for `Command` and `Event`. |
+| **`enum`** | A type that is one of several variants, each able to carry data. Much stronger than a C++ `enum`; I use it for `Command` and `Event`. |
 | **`impl` / method** | Where functions of a type are defined. `&self` borrows it, `&mut self` borrows it exclusively. |
 | **Ownership** | Every value has exactly one owner; when the owner goes away the value is freed. No manual `delete`, no garbage collector. |
 | **`Option<T>`** | Either `Some(value)` or `None`. Replaces null pointers; the compiler forces you to handle `None`. |
@@ -96,7 +96,7 @@ Terms used across the project. Sections: project, game, simulation, AI, Rust, to
 | **`Result<T, E>`** | Either `Ok(value)` or `Err(error)`. How Rust reports recoverable errors. |
 | **Slice (`&[T]`)** | A borrowed view of a contiguous run of elements. |
 | **Trait** | A set of methods a type promises to provide (like an interface or a C++ concept). |
-| **`unsafe`** | Marks code where the compiler cannot prove safety. We aim to have none in the core. |
+| **`unsafe`** | Marks code where the compiler cannot prove safety. I aim to have none in the core. |
 | **`Vec<T>`** | A growable array (like `std::vector`). |
 
 ## Tooling
@@ -115,7 +115,7 @@ Terms used across the project. Sections: project, game, simulation, AI, Rust, to
 | **WASM (WebAssembly)** | A compact format that lets compiled code (here, the Rust core) run in the browser. Lets the viewer re-simulate exactly from a command log. |
 | **WebSocket** | A persistent browser-server connection; carries live snapshots. |
 
-## deep-rts (our inspiration)
+## deep-rts (my inspiration)
 
 | Term | Meaning |
 |------|---------|
