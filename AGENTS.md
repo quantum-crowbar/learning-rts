@@ -9,11 +9,11 @@ This repository is a **metarepo**: it holds knowledge, analysis and orchestratio
 
 | Codebase | Path | Role | Rules |
 |----------|------|------|-------|
-| **deep-rts** (inspiration) | `code/deep-rts/` | Upstream DeepRTS, our **inspiration and starting reference**, pinned at `6bfbfd5` plus `patches/deep-rts/` | **Read-only.** Never commit into it. Change it only via `patches/`, and only to study or run it. |
-| **ejaj-boj** (sibling) | `code/ejaj-boj/` | The owner's earlier parametric-RTS project (Python/FastAPI server, JavaScript canvas client), pinned at `fde9d3c` (see `sources/pins.env`) | **Read-only here.** Never commit into it from this metarepo; it has its own remote (`quantum-crowbar/ejaj-boj`) and history. A source of CC0 sprites, ideas and measurements for learning-rts |
-| **learning-rts** (ours) | `code/learning-rts/` | Our own RTS + AI arena, designed by us. deep-rts inspires it; it is not a base we fix or port, and our design will keep diverging | Its own git repo. All our development happens here. |
+| **deep-rts** (inspiration) | `code/deep-rts/` | Upstream DeepRTS, my **inspiration and starting reference**, pinned at `6bfbfd5` plus `patches/deep-rts/` | **Read-only.** Never commit into it. Change it only via `patches/`, and only to study or run it. |
+| **ejaj-boj** (sibling) | `code/ejaj-boj/` | My earlier parametric-RTS project (Python/FastAPI server, JavaScript canvas client), pinned at `fde9d3c` (see `sources/pins.env`) | **Read-only here.** Never commit into it from this metarepo; it has its own remote (`quantum-crowbar/ejaj-boj`) and history. A source of CC0 sprites, ideas and measurements for learning-rts |
+| **learning-rts** (mine) | `code/learning-rts/` | My own small RTS + AI arena. deep-rts inspires it; it is not a base I fix or port, and my design will keep diverging | Its own git repo. All my development happens here. |
 
-Keeping them separate is deliberate: analysis of deep-rts must stay reproducible and must never mix with our own work.
+Keeping them separate is deliberate: analysis of deep-rts must stay reproducible and must never mix with my own work.
 
 ## Quick Start
 
@@ -30,11 +30,11 @@ First time on a fresh clone: `git submodule update --init && scripts/bootstrap-s
 
 ## Working Agreement: Teaching Mode
 
-The owner is a long-time C++ programmer who has not used it in years, and is **learning Rust and game-AI techniques** through this project. Learning is a goal of the work, not a side effect. For all learning-rts work:
+I am a long-time C++ programmer who has not used it in years, and I am **learning Rust and game-AI techniques** through this project. My goals, in order: game AI in strategy games, then Rust, then polishing my experience building real-time systems. Learning is a goal of the work, not a side effect. For all learning-rts work:
 
 - **Explain choices.** For every non-trivial decision say what was chosen, why, which alternative was rejected, and what would make the choice wrong.
-- **Show code.** When writing or changing Rust, show the relevant snippet in the reply (not only "I changed file X") and walk through the Rust concepts it uses (ownership, borrowing, traits, enums, ...), relating them to C++ where that helps.
-- **Small, readable steps** the owner can read and run, rather than large generated drops. Say which parts are new Rust ideas.
+- **Show code.** When writing or changing Rust, show the relevant snippet in the reply (not only "changed file X") and walk through the Rust concepts it uses (ownership, borrowing, traits, enums, ...), relating them to C++ where that helps.
+- **Small, readable steps** I can read and run, rather than large generated drops. Say which parts are new Rust ideas.
 - **Say what was not verified.** Mark code that was not compiled or run.
 - This governs conversation, not documents: docs stay as short as their content allows.
 
@@ -43,20 +43,20 @@ The owner is a long-time C++ programmer who has not used it in years, and is **l
 ### Code Style
 
 - **Metarepo:** Markdown, shell and JSON only. Do not add application code here; it belongs in `code/learning-rts/`.
-- **learning-rts:** Rust core (decided), Python agents/arena/match server, TypeScript viewer (the last two proposed); see `docs/general/decisions.md`. Conventions are not written yet; until then follow `.quantum-toolbox/skills/optional/code-conventions/`.
+- **learning-rts:** Rust core (decided; Python reference sim first, Rust from M4b/M4c, proposed in D26), Python agents/arena/match server, TypeScript viewer (the last two proposed); see `docs/general/decisions.md`. Conventions are not written yet; until then follow `.quantum-toolbox/skills/optional/code-conventions/`.
 - **deep-rts (reference):** C++17 engine, pybind11 bindings, Python wrapper. Match upstream style only when producing a patch.
 
 ### Architecture
 
 - `docs/architecture-docs/` — **generated** analysis (do not hand-edit; regenerate with `/update` or the commands in `specs/analysis-manifest.json`). Start at `index.md`, then `reports/findings-summary.md`.
-- `docs/general/` — **hand-written design docs for learning-rts**: `README.md` (what we are doing), `architecture.md` (components, ER and sequence diagrams, how it works), `decisions.md` (decision log with status), `glossary.md`. Keep decisions.md current whenever a decision changes.
+- `docs/general/` — **hand-written design docs for learning-rts**: `README.md` (what I am building), `architecture.md` (components, ER and sequence diagrams, how it works), `decisions.md` (decision log with status), `glossary.md`. Keep decisions.md current whenever a decision changes.
 - `docs/roadmap/ROADMAP.md` — milestones with exit gates.
 - `docs/ejaj-boj/architecture-docs/` — **generated** analysis of ejaj-boj (same rules: do not hand-edit; regenerate with `scripts/cg-ejaj-boj.py`, `cg-pyan-crosscheck.py ejaj-boj`, `cg-ejaj-boj-reports.py`). Start at `index.md`, then `reports/findings-summary.md`.
 - `docs/update-logs/` — one log per analysis session; `scripts/cg-*.py` — reproducible code-graph extraction.
 - `docs/legacy/deep-rts/` — hand-written docs from before the toolbox. **Unverified**: known to contain errors (e.g. 0-based action IDs; real IDs are 1–16 in `Constants.h`). Use only as a baseline to diff regenerated analysis against; never cite as fact.
 - `code/<repo>/code_graph.sqlite` — code graph per repo (gitignored). Prefer SQL queries over reading source when it is current.
 - `specs/analysis-manifest.json` — what was analysed, at which SHA, with which toolbox version.
-- `patches/deep-rts/` — our changes to upstream, as patch files.
+- `patches/deep-rts/` — my changes to upstream, as patch files.
 
 ### Testing
 
