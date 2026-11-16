@@ -1,20 +1,21 @@
-# deep-rts-playground
+# learning-rts
 
-Metarepo for building **learning-rts**, an RTS and deep-learning research platform, with
-[DeepRTS](https://github.com/pa-research/deep-rts) as its inspiration and starting reference.
+I am building a small real-time-strategy game as a testbed for game AI: parametrized agents play each other, I can watch every match live or as a replay, and I learn how game AI is built along the way. My goals, in order: game AI in strategy games, then Rust, then polishing my experience building real-time systems.
+
+This repository is my workspace: design docs, roadmap, and analyses of the two projects I study, [DeepRTS](https://github.com/pa-research/deep-rts) (my inspiration and starting reference) and my earlier project ejaj-boj. The game code lives in `code/learning-rts/`, a separate git repo.
 
 | | |
 |---|---|
 | Inspiration: `code/deep-rts/` | Upstream DeepRTS pinned at `6bfbfd5` + `patches/`. Read-only reference. |
-| Ours: `code/learning-rts/` | Our own project, separate git repo. |
-| Sibling: `code/ejaj-boj/` | The owner's earlier parametric-RTS project, pinned `fde9d3c`. Read-only; sprites (CC0), ideas, measurements. |
+| Mine: `code/learning-rts/` | My own project, separate git repo. |
+| Sibling: `code/ejaj-boj/` | My earlier parametric-RTS project, pinned `fde9d3c`. Read-only; sprites (CC0), ideas, measurements. |
 | Knowledge | `docs/architecture-docs/` (deep-rts, generated), `docs/ejaj-boj/architecture-docs/` (ejaj-boj, generated), `docs/general/` and `docs/roadmap/` (learning-rts design), `specs/analysis-manifest.json` |
 
 `code/` is gitignored. Set up a fresh clone with:
 
 ```bash
 git clone --recurse-submodules <this repo>
-cd deep-rts-playground
+cd learning-rts
 scripts/bootstrap-sources.sh
 ```
 
