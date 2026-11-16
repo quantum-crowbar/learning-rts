@@ -41,6 +41,8 @@ flowchart TB
     REPLAYS --> VIEW
 ```
 
+**Build order (D26, proposed).** The diagram shows the end state. Until M4c the sim core is a Python reference implementation behind the same interface; the Rust core replaces it and is checked against it by per-tick state-hash equality.
+
 **Why this shape (D07, D10-D12).** The Rust core is the only part where speed and exactness matter, because evolution and tree search will run it millions of times. Everything that benefits from fast iteration (bots, tournaments, learning) is Python. The viewer is a browser page so it works for live play, replays and several spectators. The core and Python live in **one process**: PyO3 lets Python call Rust functions directly, with no network and no serialization between them. Only the viewer is across a network boundary.
 
 ### Component responsibilities
@@ -204,7 +206,7 @@ sequenceDiagram
 
 ### 3.2 One tick inside the core
 
-The order is fixed, so the same inputs always produce the same result (D14). The order below is a **proposal**; the reasons are my design judgement and are not validated by running anything.
+The order is fixed, so the same inputs always produce the same result (D14). The order below is a **proposal**; the reasons are design judgement and are not validated by running anything.
 
 ```mermaid
 sequenceDiagram
@@ -226,7 +228,7 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    actor U as You
+    actor U as Me
     participant V as Viewer
     participant F as Replay file
     U->>V: open replay file
@@ -381,7 +383,7 @@ pub enum Event {
 
 impl World {
     /// `&mut self`: exclusive access, because stepping changes the world.
-    /// `commands: &[...]`: a borrowed view of the commands; we only read them.
+    /// `commands: &[...]`: a borrowed view of the commands; the function only reads them.
     pub fn step(&mut self, commands: &[(PlayerId, Command)]) -> Vec<Event> {
         // 1 apply commands, 2 pathing, 3 movement, 4 combat,
         // 5 economy, 6 production, 7 cleanup (see section 3.2)
@@ -439,15 +441,15 @@ attack_wave_size = 6
 | Determinism holds across machines | Integer math and fixed iteration order are enough | Hash mismatch in the M1 test; find the non-deterministic source before building further |
 | Python can pace and stream fast enough (D11) | Small snapshots, a few spectators | Move the server to Rust, or send deltas instead of full snapshots |
 | Per-tick snapshots in the replay stay small (D20) | A small game with a few hundred entities | Compress, delta-encode, or switch to a command log + WASM |
-| Rust learning curve is acceptable (D07) | Struct-of-arrays avoids the worst borrow-checker friction | Prototype in Python behind the same interfaces, rewrite later |
+| Rust learning curve is acceptable (D07) | Struct-of-arrays avoids the worst borrow-checker friction | Already the plan under D26: Python reference sim first; the Rust port is then checked against it |
 | Throughput is enough for evolution and search | Unmeasured | Smaller game, fewer simulations per decision, or rent a GPU/cloud box for learning (M6) |
 | Sprite sheets map cleanly to the skin manifest (Q04) | Regular frame grid | Placeholder skin until mapped; hand-built manifest |
 
-## 7. What we deliberately do differently from deep-rts
+## 7. What I deliberately do differently from deep-rts
 
-Defects found while analysing deep-rts, our inspiration, that shaped this design.
+Defects found while analysing deep-rts, my inspiration, that shaped this design.
 
-| deep-rts defect (see [findings](../architecture-docs/reports/findings-summary.md)) | How our design avoids it |
+| deep-rts defect (see [findings](../architecture-docs/reports/findings-summary.md)) | How my design avoids it |
 |-------------------------------------------------------------------------------------|------------------------|
 | Boolean `all_of` scenario rewards | Rewards are real-valued functions over events (D16) |
 | Observation channels written only on `setPosition`, so they go stale | Observations computed on demand from state (D16) |
